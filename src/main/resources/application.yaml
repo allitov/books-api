@@ -1,0 +1,19 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/books_api
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      schema: books_api_schema
+      connection-timeout: 10000
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
