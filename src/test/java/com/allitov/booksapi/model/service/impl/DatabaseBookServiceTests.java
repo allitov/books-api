@@ -4,6 +4,7 @@ import com.allitov.booksapi.model.data.Book;
 import com.allitov.booksapi.model.data.Category;
 import com.allitov.booksapi.model.repository.BookRepository;
 import com.allitov.booksapi.model.repository.CategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,7 +13,6 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class DatabaseBookServiceTests {
@@ -46,8 +46,8 @@ public class DatabaseBookServiceTests {
         Mockito.when(bookRepository.findById(bookId))
                 .thenReturn(Optional.empty());
 
-        NoSuchElementException thrown = Assertions.assertThrows(
-                NoSuchElementException.class,
+        EntityNotFoundException thrown = Assertions.assertThrows(
+                EntityNotFoundException.class,
                 () -> service.findBookById(bookId),
                 "Expected 'findBookById(Long id)' to throw, but it didn't."
         );
@@ -86,8 +86,8 @@ public class DatabaseBookServiceTests {
         Mockito.when(bookRepository.findBookByNameAndAuthor(bookName, author))
                 .thenReturn(Optional.empty());
 
-        NoSuchElementException thrown = Assertions.assertThrows(
-                NoSuchElementException.class,
+        EntityNotFoundException thrown = Assertions.assertThrows(
+                EntityNotFoundException.class,
                 () -> service.findBookByNameAndAuthor(bookName, author),
                 "Expected 'findBookByNameAndAuthor(String bookName, String author)' to throw, but it didn't."
         );

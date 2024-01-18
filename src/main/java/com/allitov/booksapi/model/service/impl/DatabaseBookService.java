@@ -5,6 +5,7 @@ import com.allitov.booksapi.model.data.Category;
 import com.allitov.booksapi.model.repository.BookRepository;
 import com.allitov.booksapi.model.repository.CategoryRepository;
 import com.allitov.booksapi.model.service.BookService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -25,14 +25,14 @@ public class DatabaseBookService implements BookService {
 
     public Book findBookById(@NonNull Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(MessageFormat.format(
+                .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format(
                         "Book with id \"{0}\" not found", id)));
     }
 
     @Override
     public Book findBookByNameAndAuthor(@NonNull String bookName, @NonNull String author) {
         return bookRepository.findBookByNameAndAuthor(bookName, author)
-                .orElseThrow(() -> new NoSuchElementException(MessageFormat.format(
+                .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format(
                         "Book with name \"{0}\" and author \"{1}\" not found", bookName, author)));
     }
 
