@@ -12,7 +12,7 @@ public interface BookService {
 
     Book createBook(Book book, String categoryName);
 
-    Book updateBook(Book book, String categoryName);
+    Book updateBookById(Long id, Book book, String categoryName);
 
     void deleteBookById(Long id);
 }

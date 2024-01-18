@@ -7,6 +7,7 @@ import com.allitov.booksapi.model.repository.CategoryRepository;
 import com.allitov.booksapi.model.service.BookService;
 import com.allitov.booksapi.util.BeanUtils;
 import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +24,14 @@ public class DatabaseBookService implements BookService {
 
     private final CategoryRepository categoryRepository;
 
-    public Book findBookById(Long id) {
+    public Book findBookById(@NonNull Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(MessageFormat.format(
                         "Book with id {0} not found", id)));
     }
 
     @Override
-    public Book findBookByNameAndAuthor(String bookName, String author) {
+    public Book findBookByNameAndAuthor(@NonNull String bookName, @NonNull String author) {
         return bookRepository.findBookByNameAndAuthor(bookName, author)
                 .orElseThrow(() -> new NoSuchElementException(MessageFormat.format(
                         "Book with name {0} and author {1} not found", bookName, author)));
@@ -43,7 +44,7 @@ public class DatabaseBookService implements BookService {
 
     @Override
     @Transactional
-    public Book createBook(Book book, String categoryName) {
+    public Book createBook(@NonNull Book book, @NonNull String categoryName) {
         Optional<Category> category = categoryRepository.findCategoryByName(categoryName);
         book.setCategory(category.orElseGet(() ->
                 categoryRepository.save(Category.builder().name(categoryName).build())));
@@ -53,8 +54,8 @@ public class DatabaseBookService implements BookService {
 
     @Override
     @Transactional
-    public Book updateBook(Book book, String categoryName) {
-        Book foundBook = findBookById(book.getId());
+    public Book updateBookById(@NonNull Long id, @NonNull Book book, @NonNull String categoryName) {
+        Book foundBook = findBookById(id);
 
         Optional<Category> category = categoryRepository.findCategoryByName(categoryName);
         book.setCategory(category.orElseGet(() ->
@@ -66,7 +67,7 @@ public class DatabaseBookService implements BookService {
     }
 
     @Override
-    public void deleteBookById(Long id) {
+    public void deleteBookById(@NonNull Long id) {
         bookRepository.deleteById(id);
     }
 }
