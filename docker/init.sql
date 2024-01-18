@@ -2,7 +2,7 @@ CREATE SCHEMA IF NOT EXISTS books_api_schema;
 
 CREATE TABLE IF NOT EXISTS books_api_schema.categories (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(256) NOT NULL
+    name VARCHAR(256) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS books_api_schema.books (
