@@ -29,6 +29,19 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- mapping -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.5.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.5.5.Final</version>
+        </dependency>
+
         <!-- database -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

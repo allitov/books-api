@@ -10,9 +10,9 @@ public interface BookService {
 
     List<Book> findBooksByCategoryName(String categoryName);
 
-    Book createBook(Book book, String categoryName);
+    Book createBook(Book book);
 
-    Book updateBookById(Long id, Book book, String categoryName);
+    Book updateBook(Book book);
 
     void deleteBookById(Long id);
 }

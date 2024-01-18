@@ -56,7 +56,7 @@ public class DatabaseBookServiceTests {
                 .findById(bookId);
 
         Assertions.assertEquals(
-                MessageFormat.format("Book with id {0} not found", bookId),
+                MessageFormat.format("Book with id \"{0}\" not found", bookId),
                 thrown.getMessage()
         );
     }
@@ -96,7 +96,7 @@ public class DatabaseBookServiceTests {
                 .findBookByNameAndAuthor(bookName, author);
 
         Assertions.assertEquals(
-                MessageFormat.format("Book with name {0} and author {1} not found", bookName, author),
+                MessageFormat.format("Book with name \"{0}\" and author \"{1}\" not found", bookName, author),
                 thrown.getMessage()
         );
     }
@@ -117,7 +117,7 @@ public class DatabaseBookServiceTests {
         Mockito.verify(bookRepository, Mockito.times(1))
                 .findBooksByCategoryName(categoryName);
 
-        Assertions.assertEquals(expectedBooks, actualBooks);
+        Assertions.assertEquals(expectedBooks, actualBooks, "Returned not expected books.");
     }
 
     @Test
@@ -131,7 +131,7 @@ public class DatabaseBookServiceTests {
         Mockito.when(bookRepository.save(expectedBook))
                 .thenReturn(expectedBook);
 
-        Book actualBook = service.createBook(expectedBook, categoryName);
+        Book actualBook = service.createBook(expectedBook);
 
         Mockito.verify(categoryRepository, Mockito.times(1))
                 .findCategoryByName(categoryName);
@@ -153,19 +153,19 @@ public class DatabaseBookServiceTests {
         Mockito.when(categoryRepository.save(newCategory)).thenReturn(createdCategory);
         Mockito.when(bookRepository.save(expectedBook)).thenReturn(expectedBook);
 
-        Book actualBook = service.createBook(expectedBook, categoryName);
+        Book actualBook = service.createBook(expectedBook);
 
         Mockito.verify(categoryRepository, Mockito.times(1)).findCategoryByName(categoryName);
         Mockito.verify(categoryRepository, Mockito.times(1)).save(newCategory);
         Mockito.verify(bookRepository, Mockito.times(1)).save(expectedBook);
 
-        Assertions.assertEquals(expectedBook, actualBook);
+        Assertions.assertEquals(expectedBook, actualBook, "Returned not expected book.");
     }
 
     @Test
     public void whenUpdateBookById_thenReturnUpdatedBook() {
         Long bookId = 10L;
-        String categoryName = "CategoryName";
+        String categoryName = "Category Name";
         Category category = createCategoryEntity();
         Book expectedBook = createBookEntity();
 
@@ -176,7 +176,7 @@ public class DatabaseBookServiceTests {
         Mockito.when(bookRepository.save(expectedBook))
                 .thenReturn(expectedBook);
 
-        Book actualBook = service.updateBookById(bookId, expectedBook, categoryName);
+        Book actualBook = service.updateBook(expectedBook);
 
         Mockito.verify(categoryRepository, Mockito.times(1))
                 .findCategoryByName(categoryName);
@@ -185,7 +185,7 @@ public class DatabaseBookServiceTests {
         Mockito.verify(bookRepository, Mockito.times(1))
                 .save(expectedBook);
 
-        Assertions.assertEquals(expectedBook, actualBook);
+        Assertions.assertEquals(expectedBook, actualBook, "Returned not expected book.");
     }
 
     @Test
@@ -205,7 +205,7 @@ public class DatabaseBookServiceTests {
                 .thenReturn(expectedBook);
         Mockito.when(bookRepository.findById(bookId)).thenReturn(Optional.of(expectedBook));
 
-        Book actualBook = service.updateBookById(bookId, expectedBook, categoryName);
+        Book actualBook = service.updateBook(expectedBook);
 
         Mockito.verify(categoryRepository, Mockito.times(1))
                 .findCategoryByName(categoryName);
@@ -216,7 +216,7 @@ public class DatabaseBookServiceTests {
         Mockito.verify(bookRepository, Mockito.times(1))
                 .findById(bookId);
 
-        Assertions.assertEquals(expectedBook, actualBook);
+        Assertions.assertEquals(expectedBook, actualBook, "Returned not expected book.");
     }
 
     @Test

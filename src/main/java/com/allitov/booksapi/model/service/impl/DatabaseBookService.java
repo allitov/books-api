@@ -5,7 +5,6 @@ import com.allitov.booksapi.model.data.Category;
 import com.allitov.booksapi.model.repository.BookRepository;
 import com.allitov.booksapi.model.repository.CategoryRepository;
 import com.allitov.booksapi.model.service.BookService;
-import com.allitov.booksapi.util.BeanUtils;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +26,14 @@ public class DatabaseBookService implements BookService {
     public Book findBookById(@NonNull Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(MessageFormat.format(
-                        "Book with id {0} not found", id)));
+                        "Book with id \"{0}\" not found", id)));
     }
 
     @Override
     public Book findBookByNameAndAuthor(@NonNull String bookName, @NonNull String author) {
         return bookRepository.findBookByNameAndAuthor(bookName, author)
                 .orElseThrow(() -> new NoSuchElementException(MessageFormat.format(
-                        "Book with name {0} and author {1} not found", bookName, author)));
+                        "Book with name \"{0}\" and author \"{1}\" not found", bookName, author)));
     }
 
     @Override
@@ -44,7 +43,9 @@ public class DatabaseBookService implements BookService {
 
     @Override
     @Transactional
-    public Book createBook(@NonNull Book book, @NonNull String categoryName) {
+    public Book createBook(@NonNull Book book) {
+        String categoryName = book.getCategory().getName();
+
         Optional<Category> category = categoryRepository.findCategoryByName(categoryName);
         book.setCategory(category.orElseGet(() ->
                 categoryRepository.save(Category.builder().name(categoryName).build())));
@@ -54,16 +55,15 @@ public class DatabaseBookService implements BookService {
 
     @Override
     @Transactional
-    public Book updateBookById(@NonNull Long id, @NonNull Book book, @NonNull String categoryName) {
-        Book foundBook = findBookById(id);
+    public Book updateBook(@NonNull Book book) {
+        findBookById(book.getId());
+        String categoryName = book.getCategory().getName();
 
         Optional<Category> category = categoryRepository.findCategoryByName(categoryName);
         book.setCategory(category.orElseGet(() ->
                 categoryRepository.save(Category.builder().name(categoryName).build())));
 
-        BeanUtils.copyNonNullProperties(book, foundBook);
-
-        return bookRepository.save(foundBook);
+        return bookRepository.save(book);
     }
 
     @Override
