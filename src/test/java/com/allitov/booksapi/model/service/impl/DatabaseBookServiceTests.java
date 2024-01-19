@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class DatabaseBookServiceTests {
                 .findById(bookId);
 
         Assertions.assertEquals(
-                MessageFormat.format("Book with id \"{0}\" not found", bookId),
+                String.format("Book with id '%d' not found", bookId),
                 thrown.getMessage()
         );
     }
@@ -96,7 +95,7 @@ public class DatabaseBookServiceTests {
                 .findBookByNameAndAuthor(bookName, author);
 
         Assertions.assertEquals(
-                MessageFormat.format("Book with name \"{0}\" and author \"{1}\" not found", bookName, author),
+                String.format("Book with name '%s' and author '%s' not found", bookName, author),
                 thrown.getMessage()
         );
     }

@@ -11,7 +11,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,15 +24,15 @@ public class DatabaseBookService implements BookService {
 
     public Book findBookById(@NonNull Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format(
-                        "Book with id \"{0}\" not found", id)));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Book with id '%d' not found", id)));
     }
 
     @Override
     public Book findBookByNameAndAuthor(@NonNull String bookName, @NonNull String author) {
         return bookRepository.findBookByNameAndAuthor(bookName, author)
-                .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format(
-                        "Book with name \"{0}\" and author \"{1}\" not found", bookName, author)));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Book with name '%s' and author '%s' not found", bookName, author)));
     }
 
     @Override
