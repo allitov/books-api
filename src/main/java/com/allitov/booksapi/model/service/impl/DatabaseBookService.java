@@ -1,5 +1,6 @@
 package com.allitov.booksapi.model.service.impl;
 
+import com.allitov.booksapi.exception.ExceptionMessage;
 import com.allitov.booksapi.model.data.Book;
 import com.allitov.booksapi.model.data.Category;
 import com.allitov.booksapi.model.repository.BookRepository;
@@ -25,14 +26,14 @@ public class DatabaseBookService implements BookService {
     public Book findBookById(@NonNull Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Book with id '%d' not found", id)));
+                        String.format(ExceptionMessage.BOOK_BY_ID_NOT_FOUND, id)));
     }
 
     @Override
     public Book findBookByNameAndAuthor(@NonNull String bookName, @NonNull String author) {
         return bookRepository.findBookByNameAndAuthor(bookName, author)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Book with name '%s' and author '%s' not found", bookName, author)));
+                        String.format(ExceptionMessage.BOOK_BY_NAME_AND_AUTHOR_NOT_FOUND, bookName, author)));
     }
 
     @Override
