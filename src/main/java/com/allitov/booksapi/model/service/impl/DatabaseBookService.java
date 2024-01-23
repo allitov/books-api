@@ -10,6 +10,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheManager = "redisCacheManager")
 public class DatabaseBookService implements BookService {
 
     private final BookRepository bookRepository;
@@ -30,6 +35,7 @@ public class DatabaseBookService implements BookService {
     }
 
     @Override
+    @Cacheable(value = "bookByNameAndAuthor", key = "#bookName.concat('-').concat(#author)")
     public Book findBookByNameAndAuthor(@NonNull String bookName, @NonNull String author) {
         return bookRepository.findBookByNameAndAuthor(bookName, author)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -37,12 +43,14 @@ public class DatabaseBookService implements BookService {
     }
 
     @Override
+    @Cacheable(value = "booksByCategoryName", key = "#categoryName")
     public List<Book> findBooksByCategoryName(String categoryName) {
         return bookRepository.findBooksByCategoryName(categoryName);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "booksByCategoryName", key = "#book.category.name", beforeInvocation = true)
     public Book createBook(@NonNull Book book) {
         String categoryName = book.getCategory().getName();
 
@@ -55,6 +63,18 @@ public class DatabaseBookService implements BookService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(
+                    value = "bookByNameAndAuthor",
+                    key = "#book.name.concat('-').concat(#book.author)",
+                    beforeInvocation = true
+            ),
+            @CacheEvict(
+                    value = "booksByCategoryName",
+                    key = "#book.category.name",
+                    beforeInvocation = true
+            )
+    })
     public Book updateBook(@NonNull Book book) {
         findBookById(book.getId());
         String categoryName = book.getCategory().getName();
@@ -67,6 +87,18 @@ public class DatabaseBookService implements BookService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(
+                    value = "bookByNameAndAuthor",
+                    beforeInvocation = true,
+                    allEntries = true
+            ),
+            @CacheEvict(
+                    value = "booksByCategoryName",
+                    beforeInvocation = true,
+                    allEntries = true
+            )
+    })
     public void deleteBookById(@NonNull Long id) {
         bookRepository.deleteById(id);
     }
