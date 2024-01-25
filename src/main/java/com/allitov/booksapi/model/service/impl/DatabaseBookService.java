@@ -37,7 +37,7 @@ public class DatabaseBookService implements BookService {
     @Override
     @Cacheable(value = "bookByNameAndAuthor", key = "#bookName.concat('-').concat(#author)")
     public Book findBookByNameAndAuthor(@NonNull String bookName, @NonNull String author) {
-        return bookRepository.findBookByNameAndAuthor(bookName, author)
+        return bookRepository.findFirstBookByNameAndAuthor(bookName, author)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ExceptionMessage.BOOK_BY_NAME_AND_AUTHOR_NOT_FOUND, bookName, author)));
     }

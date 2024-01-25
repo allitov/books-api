@@ -66,13 +66,13 @@ public class DatabaseBookServiceTests {
         String author = "Author Name";
         Book expectedBook = createBookEntity();
 
-        Mockito.when(bookRepository.findBookByNameAndAuthor(bookName, author))
+        Mockito.when(bookRepository.findFirstBookByNameAndAuthor(bookName, author))
                 .thenReturn(Optional.of(expectedBook));
 
         Book actualBook = service.findBookByNameAndAuthor(bookName, author);
 
         Mockito.verify(bookRepository, Mockito.times(1))
-                .findBookByNameAndAuthor(bookName, author);
+                .findFirstBookByNameAndAuthor(bookName, author);
 
         Assertions.assertEquals(expectedBook, actualBook, "Returned not expected book.");
     }
@@ -82,7 +82,7 @@ public class DatabaseBookServiceTests {
         String bookName = "Book Name";
         String author = "Author Name";
 
-        Mockito.when(bookRepository.findBookByNameAndAuthor(bookName, author))
+        Mockito.when(bookRepository.findFirstBookByNameAndAuthor(bookName, author))
                 .thenReturn(Optional.empty());
 
         EntityNotFoundException thrown = Assertions.assertThrows(
@@ -92,7 +92,7 @@ public class DatabaseBookServiceTests {
         );
 
         Mockito.verify(bookRepository, Mockito.times(1))
-                .findBookByNameAndAuthor(bookName, author);
+                .findFirstBookByNameAndAuthor(bookName, author);
 
         Assertions.assertEquals(
                 String.format("Book with name '%s' and author '%s' not found", bookName, author),
