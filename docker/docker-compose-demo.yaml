@@ -1,6 +1,6 @@
 version: '3'
 
-name: books-api
+name: books-api-demo
 
 services:
   postgres:

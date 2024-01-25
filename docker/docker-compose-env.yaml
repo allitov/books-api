@@ -1,6 +1,6 @@
 version: '3'
 
-name: books_api_env
+name: books-api-env
 
 services:
   postgres:
