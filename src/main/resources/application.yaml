@@ -6,6 +6,8 @@ server:
   port: ${SERVER_PORT:8080}
 
 spring:
+  profiles:
+    active: ${APP_PROFILE:default}
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/books_api
     username: ${POSTGRES_USER:postgres}

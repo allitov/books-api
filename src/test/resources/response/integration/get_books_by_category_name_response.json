@@ -1,0 +1,11 @@
+{
+  "books": [
+    {
+      "id": 2,
+      "name": "Pin...",
+      "author": "Oralle Tarbin",
+      "categoryName": "Comedy",
+      "publicationDate": "2005-05-25"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+app:
+  redis:
+    enable: true
