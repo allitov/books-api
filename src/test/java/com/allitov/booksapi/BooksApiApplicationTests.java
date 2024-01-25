@@ -1,10 +1,9 @@
 package com.allitov.booksapi;
 
+import com.allitov.booksapi.integration.AbstractIntegrationTests;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class BooksApiApplicationTests {
+class BooksApiApplicationTests extends AbstractIntegrationTests {
 
     @Test
     void contextLoads() {
