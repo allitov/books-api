@@ -228,7 +228,7 @@ public class DatabaseBookServiceTests {
 
         service.deleteBookById(bookId);
 
-        Mockito.verify(bookRepository, Mockito.times(1)).deleteById(bookId);
+        Mockito.verify(bookRepository, Mockito.times(1)).deleteBookById(bookId);
     }
 
     private Book createBookEntity() {
