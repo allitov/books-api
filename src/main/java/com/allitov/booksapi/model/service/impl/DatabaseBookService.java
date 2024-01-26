@@ -90,15 +90,16 @@ public class DatabaseBookService implements BookService {
     }
 
     @Override
+    @Transactional
     public void deleteBookById(@NonNull Long id) {
-        try {
-            Book book = findBookById(id);
+        List<Book> deletedBooks = bookRepository.deleteBookById(id);
+
+        if (!deletedBooks.isEmpty()) {
+            Book book = deletedBooks.getFirst();
             String bookByNameAndAuthorKey = book.getName() + "-" + book.getAuthor();
             String booksByCategoryNameKey = book.getCategory().getName();
             cacheManager.getCache("bookByNameAndAuthor").evictIfPresent(bookByNameAndAuthorKey);
             cacheManager.getCache("booksByCategoryName").evictIfPresent(booksByCategoryNameKey);
-        } catch (EntityNotFoundException ignored) {}
-
-        bookRepository.deleteById(id);
+        }
     }
 }
