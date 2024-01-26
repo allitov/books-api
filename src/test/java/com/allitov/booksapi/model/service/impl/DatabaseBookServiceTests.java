@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.cache.CacheManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,7 +21,10 @@ public class DatabaseBookServiceTests {
 
     private final CategoryRepository categoryRepository = Mockito.mock(CategoryRepository.class);
 
-    private final DatabaseBookService service = new DatabaseBookService(bookRepository, categoryRepository);
+    private final CacheManager cacheManager = Mockito.mock(CacheManager.class);
+
+    private final DatabaseBookService service =
+            new DatabaseBookService(bookRepository, categoryRepository, cacheManager);
 
     @Test
     public void whenFindBookById_thenReturnBook() {

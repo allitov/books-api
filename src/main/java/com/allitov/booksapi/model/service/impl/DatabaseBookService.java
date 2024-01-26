@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,6 +28,8 @@ public class DatabaseBookService implements BookService {
     private final BookRepository bookRepository;
 
     private final CategoryRepository categoryRepository;
+
+    private final CacheManager cacheManager;
 
     public Book findBookById(@NonNull Long id) {
         return bookRepository.findById(id)
@@ -87,19 +90,15 @@ public class DatabaseBookService implements BookService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(
-                    value = "bookByNameAndAuthor",
-                    beforeInvocation = true,
-                    allEntries = true
-            ),
-            @CacheEvict(
-                    value = "booksByCategoryName",
-                    beforeInvocation = true,
-                    allEntries = true
-            )
-    })
     public void deleteBookById(@NonNull Long id) {
+        try {
+            Book book = findBookById(id);
+            String bookByNameAndAuthorKey = book.getName() + "-" + book.getAuthor();
+            String booksByCategoryNameKey = book.getCategory().getName();
+            cacheManager.getCache("bookByNameAndAuthor").evictIfPresent(bookByNameAndAuthorKey);
+            cacheManager.getCache("booksByCategoryName").evictIfPresent(booksByCategoryNameKey);
+        } catch (EntityNotFoundException ignored) {}
+
         bookRepository.deleteById(id);
     }
 }
