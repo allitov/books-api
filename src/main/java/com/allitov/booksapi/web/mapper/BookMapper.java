@@ -5,15 +5,14 @@ import com.allitov.booksapi.model.data.Category;
 import com.allitov.booksapi.web.dto.request.BookRequest;
 import com.allitov.booksapi.web.dto.response.BookListResponse;
 import com.allitov.booksapi.web.dto.response.BookResponse;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
-public interface BookMapper {
+@Component
+public class BookMapper {
 
-    default Book requestToBook(BookRequest request) {
+    public Book requestToBook(BookRequest request) {
         if (request == null) {
             return null;
         }
@@ -28,14 +27,14 @@ public interface BookMapper {
         return book.build();
     }
 
-    default Book requestToBook(Long bookId, BookRequest request) {
+    public Book requestToBook(Long bookId, BookRequest request) {
         Book book = requestToBook(request);
         book.setId(bookId);
 
         return book;
     }
 
-    default BookResponse bookToResponse(Book book) {
+    public BookResponse bookToResponse(Book book) {
         if (book == null) {
             return null;
         }
@@ -51,18 +50,18 @@ public interface BookMapper {
         return bookResponse;
     }
 
-    default List<BookResponse> bookListToResponseList(List<Book> books) {
+    public BookListResponse bookListToBookListResponse(List<Book> books) {
+        BookListResponse response = new BookListResponse();
+        response.setBooks(bookListToResponseList(books));
+
+        return response;
+    }
+
+    private List<BookResponse> bookListToResponseList(List<Book> books) {
         if (books == null) {
             return null;
         }
 
         return books.stream().map(this::bookToResponse).toList();
-    }
-
-    default BookListResponse bookListToBookListResponse(List<Book> books) {
-        BookListResponse response = new BookListResponse();
-        response.setBooks(bookListToResponseList(books));
-
-        return response;
     }
 }
